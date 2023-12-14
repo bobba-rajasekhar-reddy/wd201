@@ -10,38 +10,65 @@ const todoList = () => {
   const overdue = () => {
     // Write the date check condition here and return the array
     // of overdue items accordingly.
-    const overdue = [];
-    const findOverdueItems = (all, today) => {
-    return all.filter(value => value.dueDate < today);
-};
+  const overdueTasks = [];
+all.forEach((task) => {
+  if (task.deadline < today) {
+    overdueTasks.push(task);
+  }
+});
+return overdueTasks;
+
   };
 
   const dueToday = () => {
     // Write the date check condition here and return the array
     // of todo items that are due today accordingly.
-    const findItemsDueToday = (all, today) => {
-    return all.filter(value => value.dueDate === today);
-};
+    const tasksDueToday = [];
+all.forEach((task) => {
+  if (task.deadline === today) {
+    tasksDueToday.push(task);
+  }
+});
+return tasksDueToday;
+
   };
 
   const dueLater = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
-    const findItemsDueLater = (all, today) => {
-    return all.filter(value => value.dueDate > today);
-};
+    const tasksDueLater = [];
+all.forEach((task) => {
+  if (task.deadline > today) {
+    tasksDueLater.push(task);
+  }
+});
+return tasksDueLater;
+
   };
 
   const toDisplayableList = (list) => {
     // Format the To-Do list here, and return the output string
     // as per the format given above.
    const generateOutputArray = (list, today) => {
-    return list.map(value => {
-        const checkbox = value.completed ? '[x]' : '[ ]';
-        const dueDateString = value.dueDate === today ? '' : ` ${value.dueDate}`;
-        return `${checkbox} ${value.title}${dueDateString}`;
-    });
-};
+    const taskList = [];
+list.forEach((task) => {
+  if (task.deadline === today) {
+    if (task.completed === true) {
+      taskList.push(`[x] ${task.title}`);
+    } else {
+      taskList.push(`[ ] ${task.title}`);
+    }
+  } else {
+    if (task.completed === true) {
+      taskList.push(`[x] ${task.title} ${task.deadline}`);
+    } else {
+      taskList.push(`[ ] ${task.title} ${task.deadline}`);
+    }
+  }
+});
+const output = taskList.join("\n");
+return output;
+
   };
 
   return {
