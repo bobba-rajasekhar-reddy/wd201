@@ -7,69 +7,61 @@ const todoList = () => {
     all[index].completed = true;
   };
 
-  const overdue = () => {
-    // Write the date check condition here and return the array
-    // of overdue items accordingly.
+ const overdue = () => {
   const overdueTasks = [];
-all.forEach((task) => {
-  if (task.deadline < today) {
-    overdueTasks.push(task);
-  }
-});
-return overdueTasks;
+  all.forEach((task) => {
+    if (task.deadline < today) {
+      overdueTasks.push(task);
+    }
+  });
+  return overdueTasks;
+};
 
-  };
+const dueToday = () => {
+  const tasksDueToday = [];
+  all.forEach((task) => {
+    if (task.deadline === today) {
+      tasksDueToday.push(task);
+    }
+  });
+  return tasksDueToday;
+};
 
-  const dueToday = () => {
-    // Write the date check condition here and return the array
-    // of todo items that are due today accordingly.
-    const tasksDueToday = [];
-all.forEach((task) => {
-  if (task.deadline === today) {
-    tasksDueToday.push(task);
-  }
-});
-return tasksDueToday;
+const dueLater = () => {
+  const tasksDueLater = [];
+  all.forEach((task) => {
+    if (task.deadline > today) {
+      tasksDueLater.push(task);
+    }
+  });
+  return tasksDueLater;
+};
 
-  };
-
-  const dueLater = () => {
-    // Write the date check condition here and return the array
-    // of todo items that are due later accordingly.
-    const tasksDueLater = [];
-all.forEach((task) => {
-  if (task.deadline > today) {
-    tasksDueLater.push(task);
-  }
-});
-return tasksDueLater;
-
-  };
-
-  const toDisplayableList = (list) => {
-    // Format the To-Do list here, and return the output string
-    // as per the format given above.
-   const generateOutputArray = (list, today) => {
+const toDisplayableList = (list) => {
+  const generateOutputArray = (list, today) => {
     const taskList = [];
-list.forEach((task) => {
-  if (task.deadline === today) {
-    if (task.completed === true) {
-      taskList.push(`[x] ${task.title}`);
-    } else {
-      taskList.push(`[ ] ${task.title}`);
-    }
-  } else {
-    if (task.completed === true) {
-      taskList.push(`[x] ${task.title} ${task.deadline}`);
-    } else {
-      taskList.push(`[ ] ${task.title} ${task.deadline}`);
-    }
-  }
-});
-const output = taskList.join("\n");
-return output;
-
+    list.forEach((task) => {
+      if (task.deadline === today) {
+        if (task.completed === true) {
+          taskList.push(`[x] ${task.title}`);
+        } else {
+          taskList.push(`[ ] ${task.title}`);
+        }
+      } else {
+        if (task.completed === true) {
+          taskList.push(`[x] ${task.title} ${task.deadline}`);
+        } else {
+          taskList.push(`[ ] ${task.title} ${task.deadline}`);
+        }
+      }
+    });
+    const output = taskList.join("\n");
+    return output;
   };
+
+  return generateOutputArray(list, today);
+};
+
 
   return {
     all,
