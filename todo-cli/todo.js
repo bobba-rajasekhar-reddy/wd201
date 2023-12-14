@@ -19,48 +19,29 @@ const todoList = () => {
   const dueToday = () => {
     // Write the date check condition here and return the array
     // of todo items that are due today accordingly.
-    const todaydue = [];
-    all.forEach((value) => {
-      if (value.dueDate === today) {
-        todaydue.push(value);
-      }
-    });
-    return todaydue;
+    const findItemsDueToday = (all, today) => {
+    return all.filter(value => value.dueDate === today);
+};
   };
 
   const dueLater = () => {
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
-    const duelater = [];
-    all.forEach((value) => {
-      if (value.dueDate > today) {
-        duelater.push(value);
-      }
-    });
-    return duelater;
+    const findItemsDueLater = (all, today) => {
+    return all.filter(value => value.dueDate > today);
+};
   };
 
   const toDisplayableList = (list) => {
     // Format the To-Do list here, and return the output string
     // as per the format given above.
-    const arr = [];
-    list.forEach((value) => {
-      if (value.dueDate === today) {
-        if (value.completed === true) {
-          arr.push(`[x] ${value.title}`);
-        } else {
-          arr.push(`[ ] ${value.title}`);
-        }
-      } else {
-        if (value.completed === true) {
-          arr.push(`[x] ${value.title} ${value.dueDate}`);
-        } else {
-          arr.push(`[ ] ${value.title} ${value.dueDate}`);
-        }
-      }
+   const generateOutputArray = (list, today) => {
+    return list.map(value => {
+        const checkbox = value.completed ? '[x]' : '[ ]';
+        const dueDateString = value.dueDate === today ? '' : ` ${value.dueDate}`;
+        return `${checkbox} ${value.title}${dueDateString}`;
     });
-    const output = arr.join("\n");
-    return output;
+};
   };
 
   return {
