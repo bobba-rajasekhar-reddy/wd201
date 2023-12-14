@@ -9,32 +9,43 @@ const mapping = {
     "/registration" : "registration.html"
 };
 
-let server = http.createServer((req,res)=>{
-    let url = req.url;
-    console.log(url);
-
-    // Check if the URL is in the mapping
+const serveFile = (url, res) => {
     if (mapping[url]) {
         let filepath = path.join(__dirname, mapping[url]);
         console.log(filepath);
 
-        // Read and serve the HTML file
         fs.readFile(filepath, 'utf-8', (err, page) => {
             if (err) {
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end('Internal Server Error');
-                console.error(`Error reading file: ${filepath}`, err);
+                handleError(res, 500, 'Internal Server Error', `Error reading file: ${filepath}`, err);
             } else {
-                res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.write(page);
-                res.end();
+                sendResponse(res, 200, 'text/html', page);
             }
         });
     } else {
-        // Handle unknown routes
-        res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end('404 Not Found');
+        handleUnknownRoute(res);
     }
+};
+
+const handleError = (res, statusCode, message, logMessage, error) => {
+    console.error(logMessage, error);
+    sendResponse(res, statusCode, 'text/plain', message);
+};
+
+const handleUnknownRoute = (res) => {
+    sendResponse(res, 404, 'text/plain', '404 Not Found');
+};
+
+const sendResponse = (res, statusCode, contentType, body) => {
+    res.writeHead(statusCode, { 'Content-Type': contentType });
+    res.write(body);
+    res.end();
+};
+
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    console.log(url);
+
+    serveFile(url, res);
 });
 
 server.listen(args.port);
