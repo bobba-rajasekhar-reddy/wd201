@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;900&display=swap");
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f0edee;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  gap: 24px;
+  justify-content: center;
+  height: 100vh;
+}
+#formData {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  gap: 20px;
+  width: 619px;
+}
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.checkbox {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+input:not([type="checkbox"]) {
+  width: 400px;
+  height: 22px;
+  border-radius: 4px;
+  background-color: #f0edee;
+  border: none;
+  padding: 8px;
+}
+input::placeholder {
+  color: #7c7c7c;
+  font-size: 14px;
+}
+
+input[type="date"] {
+  color: #7c7c7c;
+}
+
+label {
+  font-weight: 600;
+  color: #1d1a05;
+}
+
+legend {
+  font-size: 28px;
+  font-weight: 600;
+}
+button {
+  font-size: 14px;
+  background-color: #137547;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+}
+button:disabled {
+  font-size: 14px;
+  background-color: #78d28b;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+}
+
+.userinfo {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  width: auto;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 20px;
+}
+.error-msg {
+  color: crimson;
+  width: 619px;
+  padding: 16px;
+  text-align: center;
+}
+    </style>
+</head>
+
+<body>
+    <div class="error-msg"></div>
+    <form id="formData">
+        <legend>Registration Form</legend>
+        <div class="container">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name">
+        </div>
+        <div class="container">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div class="container">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <div class="container">
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="dob" id="dob">
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" name="agree" id="agree">
+            <label for="agree">Accept Terms and Conditions</label>
+        </div>
+        <button type="submit" id="submit">submit</button>
+    </form>
+
+    <a href="/"> back to home page</a>
+    <div class="userinfo">
+        <h3>Submitted Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Dob</th>
+                    <th>Accepted terms?</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+            </tbody>
+        </table>
+
+
+    </div>
+    <script >
+
+document.addEventListener("DOMContentLoaded", function () {
+  // console.log("document loaded");
+  let usersDetails = localStorage.getItem("users");
+
+  // console.log(usersDetails);
+  if (usersDetails) {
+    // console.log("in if ");
+    let storedData = JSON.parse(usersDetails);
+    // console.log(storedData);
+    users = [...storedData];
+    // console.log(users);
+    let htmlContent = ``;
+    users.forEach(function (userDetails) {
+      htmlContent += `<tr>
+      <td>${userDetails.name}</td>
+      <td>${userDetails.email}</td>
+      <td>${userDetails.password}</td>
+      <td>${userDetails.dob}</td>
+      <td>${userDetails.terms}</td>
+    </tr>`;
+    });
+    tableBody.innerHTML = htmlContent;
+  } else {
+    return;
+  }
+});
+
+function showError(message) {
+  errorContainer.textContent = "";
+  errorContainer.textContent = message;
+}
+
+// global variable
+let users = [];
+//  targeting elements
+let errorContainer = document.querySelector(".error-msg");
+let form = document.getElementById("formData");
+let nameElement = document.getElementById("name");
+let emailElement = document.getElementById("email");
+let passwordElement = document.getElementById("password");
+let dobElement = document.getElementById("dob");
+let checkBoxElement = document.getElementById("agree");
+let tableBody = document.getElementById("tableBody");
+let btn = document.getElementById("submit");
+
+//validation functions
+
+function isNameEmpty(name) {
+  return name === "";
+}
+function isEmailEmpty(email) {
+  return email === "";
+}
+
+function isPasswordEmpty(password) {
+  return password == "";
+}
+function isAgeEmpty(age) {
+  return age == "";
+}
+function isInvalidAge(age) {
+  let currentDate = new Date();
+  let userDob = new Date(age);
+  let userAge = currentDate.getFullYear() - userDob.getFullYear();
+  return userAge < 18 || userAge > 55;
+}
+
+//responding to submit event
+
+form.addEventListener("submit", function (event) {
+  console.log("Form submission started");
+
+  event.preventDefault();
+
+  let userName = nameElement.value;
+  let userEmail = emailElement.value;
+  let userPassword = passwordElement.value;
+  let userDob = dobElement.value;
+  let acceptedTerms = checkBoxElement.checked;
+
+  console.log("Form data captured");
+
+  if (isNameEmpty(userName)) {
+    showError("Name Cannot Be Empty, Please Fill That field");
+    return;
+  }
+  if (isEmailEmpty(userEmail)) {
+    showError("Email is Required, Please Fill That Field");
+    return;
+  }
+  if (isPasswordEmpty(userPassword)) {
+    showError("Please Fill The Password");
+    return;
+  }
+  if (isAgeEmpty(userDob)) {
+    showError("Date of Birth is Required");
+    return;
+  }
+  if (isInvalidAge(userDob)) {
+    showError("Your Age Should be Between 18 and 55");
+    return;
+  }
+  // console.log("validations completed");
+  showError("");
+
+  let user = {
+    name: userName,
+    email: userEmail,
+    password: userPassword,
+    dob: userDob,
+    terms: acceptedTerms,
+  };
+  users.push(user);
+  localStorage.setItem("users", JSON.stringify(users));
+
+  location.reload();
+});
+    </script>
+</body>
+
+</html>
