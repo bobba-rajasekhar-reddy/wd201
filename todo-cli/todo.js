@@ -7,61 +7,53 @@ const todoList = () => {
     all[index].completed = true;
   };
 
- const overdue = () => {
-  const overdueTasks = [];
-  all.forEach((task) => {
-    if (task.deadline < today) {
-      overdueTasks.push(task);
-    }
-  });
-  return overdueTasks;
-};
+  const overdue = () => {
+    // Write the date check condition here and return the array
+    // of overdue items accordingly.
 
-const dueToday = () => {
-  const tasksDueToday = [];
-  all.forEach((task) => {
-    if (task.deadline === today) {
-      tasksDueToday.push(task);
-    }
-  });
-  return tasksDueToday;
-};
-
-const dueLater = () => {
-  const tasksDueLater = [];
-  all.forEach((task) => {
-    if (task.deadline > today) {
-      tasksDueLater.push(task);
-    }
-  });
-  return tasksDueLater;
-};
-
-const toDisplayableList = (list) => {
-  const generateOutputArray = (list, today) => {
-    const taskList = [];
-    list.forEach((task) => {
-      if (task.deadline === today) {
-        if (task.completed === true) {
-          taskList.push(`[x] ${task.title}`);
-        } else {
-          taskList.push(`[ ] ${task.title}`);
-        }
-      } else {
-        if (task.completed === true) {
-          taskList.push(`[x] ${task.title} ${task.deadline}`);
-        } else {
-          taskList.push(`[ ] ${task.title} ${task.deadline}`);
-        }
-      }
+    const overdueTasks = all.filter((item) => {
+      return item.dueDate < today;
     });
-    const output = taskList.join("\n");
-    return output;
+
+    return overdueTasks;
   };
 
-  return generateOutputArray(list, today);
-};
+  const dueToday = () => {
+    // Write the date check condition here and return the array
+    // of todo items that are due today accordingly.
 
+    const tasksDueToday = all.filter((item) => {
+      return item.dueDate === today;
+    });
+
+    return tasksDueToday;
+  };
+
+  const dueLater = () => {
+    // Write the date check condition here and return the array
+    // of todo items that are due later accordingly.
+
+    const upcomingTasks = all.filter((item) => {
+      return item.dueDate > today;
+    });
+
+    return upcomingTasks;
+  };
+
+  const toDisplayableList = (list) => {
+    // Format the To-Do list here, and return the output string
+    // as per the format given above.
+    const transformedList = list.map((item) => {
+      const isDueToday = item.dueDate === today;
+      const completionStatus = item.completed ? "[x]" : "[ ]";
+      const formattedDueDate = isDueToday ? "" : ` ${item.dueDate}`;
+
+      return `${completionStatus} ${item.title}${formattedDueDate}`;
+    });
+
+    const output = transformedList.join("\n");
+    return output;
+  };
 
   return {
     all,
@@ -87,10 +79,10 @@ const formattedDate = (d) => {
 const dateToday = new Date();
 const today = formattedDate(dateToday);
 const yesterday = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() - 1)),
+  new Date(new Date().setDate(dateToday.getDate() - 1))
 );
 const tomorrow = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() + 1)),
+  new Date(new Date().setDate(dateToday.getDate() + 1))
 );
 
 todos.add({ title: "Submit assignment", dueDate: yesterday, completed: false });
